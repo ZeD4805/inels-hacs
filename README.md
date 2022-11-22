@@ -1,2 +1,2 @@
 # inels-hacs-temp
-Temporary repository of iNELS to mqtt for german fair purposes
+Temporary repository of iNELS to mqtt for development purposes
