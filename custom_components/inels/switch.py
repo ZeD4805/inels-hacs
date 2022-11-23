@@ -9,7 +9,7 @@ from inelsmqtt.devices import Device
 from inelsmqtt.const import (
     # Inels types
     RFSC_61,
-    SA3_01B,
+    SA3_01B,  # HERE ?
     DA3_22M,
     GTR3_50,
     GSB3_90SX,

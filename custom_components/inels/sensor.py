@@ -11,7 +11,7 @@ from inelsmqtt.const import (
     BATTERY,
     TEMP_IN,
     TEMP_OUT,
-    LIGHT_IN,
+    LIGHT_IN,  # HERE?
     AIN,
     HUMIDITY,
     DEW_POINT,
