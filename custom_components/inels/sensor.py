@@ -278,7 +278,7 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
     """The platform class required by Home Assistant."""
 
     entity_description: InelsSensorEntityDescription
-    data_structure: dict[str, list[int]]
+    data_struct: dict[str, list[int]]
 
     def __init__(
         self,
@@ -303,5 +303,5 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         """Refresh data."""
         super()._callback(new_value)
         self._attr_native_value = self.entity_description.value(
-            self._device, self.data_structure
+            self._device, self.data_struct
         )
