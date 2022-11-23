@@ -3,7 +3,7 @@
   "name": "iNELS",
   "config_flow": true,
   "version": "0.0.1",
-  "issue_tracker": "https://github.com/Nejezchleb/inels-hacs/issues",
+  "issue_tracker": "https://github.com/zed4805/inels-hacs/issues",
   "documentation": "https://github.com/zed4805/inels-hacs",
   "requirements": [
     "inels-mqtt-dev==0.0.1"
