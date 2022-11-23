@@ -296,9 +296,7 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         if description.name:
             self._attr_name = f"{self._attr_name}-{description.name}"
 
-        self._attr_native_value = self.entity_description.value(
-            self._device, data_struct
-        )
+        self._attr_native_value = self.entity_description.value(self._device)
 
         self.data_struct = data_struct
 
