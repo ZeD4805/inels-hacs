@@ -11,7 +11,7 @@ from inelsmqtt.const import (
     BATTERY,
     TEMP_IN,
     TEMP_OUT,
-    LIGHT_IN,  # HERE?
+    LIGHT_IN,
     AIN,
     HUMIDITY,
     DEW_POINT,
@@ -244,6 +244,7 @@ async def async_setup_entry(
 
     entities: "list[InelsSensor]" = []
 
+    # TODO find solution to avoid including data_struct to the callbacks
     for device in device_list:
         if device.device_type == Platform.SENSOR:
             if device.inels_type == RFTI_10B:
@@ -295,7 +296,9 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         if description.name:
             self._attr_name = f"{self._attr_name}-{description.name}"
 
-        self._attr_native_value = self.entity_description.value(self._device)
+        self._attr_native_value = self.entity_description.value(
+            self._device, data_struct
+        )
 
         self.data_struct = data_struct
 
