@@ -40,10 +40,10 @@ async def async_setup_entry(
                 entities.append(InelsSwitch(device=device))
             elif device.inels_type == SA3_01B:
                 entities.append(InelsSwitch(device=device))
-            elif device.inels_type == GTR3_50:
-                entities.append(InelsSwitch(device=device))
-            elif device.inels_type == GSB3_90SX:
-                entities.append(InelsSwitch(device=device))
+            # elif device.inels_type == GTR3_50:
+            #    entities.append(InelsSwitch(device=device))
+            # elif device.inels_type == GSB3_90SX:
+            #    entities.append(InelsSwitch(device=device))
 
     async_add_entities(
         [
