@@ -155,14 +155,20 @@ def __get_light_intensity(
     )
 
 
-def __get_analog_temperature(
-    device: Device
-) -> float | None:
+def __get_analog_temperature(device: Device) -> float | None:
     """Get analog temperature."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]), 16) / 100
+    return (
+        int(
+            _process_data(
+                device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]
+            ),
+            16,
+        )
+        / 100
+    )
 
 
 def __get_humidity(device: Device) -> float | None:
@@ -170,7 +176,16 @@ def __get_humidity(device: Device) -> float | None:
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY]), 16) / 100
+    return (
+        int(
+            _process_data(
+                device.state,
+                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY],
+            ),
+            16,
+        )
+        / 100
+    )
 
 
 def __get_dew_point(device: Device) -> float | None:
@@ -178,7 +193,16 @@ def __get_dew_point(device: Device) -> float | None:
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT]), 16) / 100
+    return (
+        int(
+            _process_data(
+                device.state,
+                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT],
+            ),
+            16,
+        )
+        / 100
+    )
 
 
 # RFTI_10B
@@ -284,28 +308,19 @@ async def async_setup_entry(
         if device.device_type == Platform.SENSOR:
             if device.inels_type == RFTI_10B:
                 descriptions = SENSOR_DESCRIPTION_TEMPERATURE
-                data_struct = TEMP_SENSOR_DATA
             elif device.inels_type == SA3_01B:
                 descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-                data_struct = RELAY_DATA
             elif device.inels_type == DA3_22M:
                 descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-                data_struct = TWOCHANNELDIMMER_DATA
             elif device.inels_type == GTR3_50:
                 descriptions = SENSOR_DESCRIPTION_MULTISENSOR
-                data_struct = THERMOSTAT_DATA
             elif device.inels_type == GSB3_90SX:
                 descriptions = SENSOR_DESCRIPTION_MULTISENSOR
-                data_struct = BUTTONARRAY_DATA
             else:
                 continue
 
             for description in descriptions:
-                entities.append(
-                    InelsSensor(
-                        device, description=description, data_struct=data_struct
-                    )
-                )
+                entities.append(InelsSensor(device, description=description))
 
     async_add_entities(entities, True)
 
@@ -320,7 +335,6 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         self,
         device: Device,
         description: InelsSensorEntityDescription,
-        data_struct: dict[str, list[int]],
     ) -> None:
         """Initialize a sensor."""
         super().__init__(device=device)
@@ -331,15 +345,9 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         if description.name:
             self._attr_name = f"{self._attr_name}-{description.name}"
 
-        self._attr_native_value = self.entity_description.value(
-            self._device, self.data_struct
-        )
-
-        self.data_struct = data_struct
+        self._attr_native_value = self.entity_description.value(self._device)
 
     def _callback(self, new_value: Any) -> None:
         """Refresh data."""
         super()._callback(new_value)
-        self._attr_native_value = self.entity_description.value(
-            self._device, self.data_struct
-        )
+        self._attr_native_value = self.entity_description.value(self._device)
