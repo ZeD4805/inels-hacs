@@ -33,15 +33,16 @@ async def async_setup_entry(
 
     for device in device_list:
         if device.device_type == Platform.LIGHT:
-            if device.inels_type == DA3_22M:
-                entities.append(
-                    InelsLightChannel(device, InelsLightChannelDescription(2, 0))
-                )
-                entities.append(
-                    InelsLightChannel(device, InelsLightChannelDescription(2, 1))
-                )
-            else:
-                entities.append(InelsLight(device))
+            entities.append(InelsLight(device))
+            # if device.inels_type == DA3_22M:
+            #    entities.append(
+            #        InelsLightChannel(device, InelsLightChannelDescription(2, 0))
+            #    )
+            #    entities.append(
+            #        InelsLightChannel(device, InelsLightChannelDescription(2, 1))
+            #    )
+            # else:
+            #    entities.append(InelsLight(device))
 
     async_add_entities(entities)
 
