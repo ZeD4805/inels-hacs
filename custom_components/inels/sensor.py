@@ -30,6 +30,10 @@ from inelsmqtt.const import (
 )
 from inelsmqtt.devices import Device
 
+from inelsmqtt.const import (
+    INELS_DEVICE_TYPE_DATA_STRUCT_DATA,
+)
+
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -78,72 +82,103 @@ def _process_data(data: str, indexes: list) -> str:
     return f"0x{range_joined}"
 
 
-def __get_battery_level(
-    device: Device, data_struct: dict[str, list[int]]
-) -> int | None:
+def __get_battery_level(device: Device) -> int | None:
     """Get battery level of the device."""
     if device.is_available is False:
         return None
 
     # then get calculate the battery. In our case is 100 or 0
-    return 100 if int(_process_data(device.state, data_struct[BATTERY]), 16) == 0 else 0
+    return (
+        100
+        if int(
+            _process_data(
+                device.state,
+                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][BATTERY],
+            ),
+            16,
+        )
+        == 0
+        else 0
+    )
 
 
-def __get_temperature_in(
-    device: Device, data_struct: dict[str, list[int]]
-) -> float | None:
+def __get_temperature_in(device: Device) -> float | None:
     """Get temperature inside."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, data_struct[TEMP_IN]), 16) / 100
+    return (
+        int(
+            _process_data(
+                device.state,
+                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][TEMP_IN],
+            ),
+            16,
+        )
+        / 100
+    )
 
 
-def __get_temperature_out(
-    device: Device, data_struct: dict[str, list[int]]
-) -> float | None:
+def __get_temperature_out(device: Device) -> float | None:
     """Get temperature outside."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, data_struct[TEMP_OUT]), 16) / 100
+    return (
+        int(
+            _process_data(
+                device.state,
+                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][TEMP_OUT],
+            ),
+            16,
+        )
+        / 100
+    )
 
 
 def __get_light_intensity(
     device: Device,
-    data_struct: dict[str, list[int]],
 ) -> float | None:
     """Get light intensity."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, data_struct[LIGHT_IN]), 16) / 100
+    return (
+        int(
+            _process_data(
+                device.state,
+                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][LIGHT_IN],
+            ),
+            16,
+        )
+        / 100
+    )
 
 
 def __get_analog_temperature(
-    device: Device, data_struct: dict[str, list[int]]
+    device: Device
 ) -> float | None:
     """Get analog temperature."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, data_struct[AIN]), 16) / 100
+    return int(_process_data(device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]), 16) / 100
 
 
-def __get_humidity(device: Device, data_struct: dict[str, list[int]]) -> float | None:
+def __get_humidity(device: Device) -> float | None:
     """Get humidity."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, data_struct[HUMIDITY]), 16) / 100
+    return int(_process_data(device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY]), 16) / 100
 
 
-def __get_dew_point(device: Device, data_struct: dict[str, list[int]]) -> float | None:
+def __get_dew_point(device: Device) -> float | None:
     """Get dew point."""
     if device.is_available is False:
         return None
 
-    return int(_process_data(device.state, data_struct[DEW_POINT]), 16) / 100
+    return int(_process_data(device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT]), 16) / 100
 
 
 # RFTI_10B
