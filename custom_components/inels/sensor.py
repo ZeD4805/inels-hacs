@@ -329,7 +329,6 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
     """The platform class required by Home Assistant."""
 
     entity_description: InelsSensorEntityDescription
-    data_struct: dict[str, list[int]]
 
     def __init__(
         self,
