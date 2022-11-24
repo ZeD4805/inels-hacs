@@ -296,11 +296,15 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         if description.name:
             self._attr_name = f"{self._attr_name}-{description.name}"
 
-        self._attr_native_value = self.entity_description.value(self._device)
+        self._attr_native_value = self.entity_description.value(
+            self._device, self.data_struct
+        )
 
         self.data_struct = data_struct
 
     def _callback(self, new_value: Any) -> None:
         """Refresh data."""
         super()._callback(new_value)
-        self._attr_native_value = self.entity_description.value(self._device)
+        self._attr_native_value = self.entity_description.value(
+            self._device, self.data_struct
+        )
