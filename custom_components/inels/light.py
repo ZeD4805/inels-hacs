@@ -163,7 +163,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             print(transition)
         else:
             # mount device ha value
-            ha_val = self._device.get_ha_value()
+            ha_val = self._device.get_value()
             ha_val.out[self._entity_description.channel_index] = 0
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
@@ -176,12 +176,12 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             brightness = int(kwargs[ATTR_BRIGHTNESS] / 2.55)
             brightness = min(brightness, 100)
 
-            ha_val = self._device.get_ha_value()
+            ha_val = self._device.get_value()
             ha_val.out[self._entity_description.channel_index] = brightness
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
         else:
-            ha_val = self._device.get_ha_value()
+            ha_val = self._device.get_value()
             ha_val.out[self._entity_description.channel_index] = 100
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
