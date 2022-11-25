@@ -116,14 +116,14 @@ class InelsLightChannelDescription:
 class InelsLightChannel(InelsBaseEntity, LightEntity):
     """Light Channel class for HA."""
 
-    entity_description: InelsLightChannelDescription
+    _entity_description: InelsLightChannelDescription
 
     def __init__(
         self, device: Device, description: InelsLightChannelDescription
     ) -> None:
         """Initialize a light."""
         super().__init__(device=device)
-        self.description = description
+        self._entity_description = description
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
@@ -135,7 +135,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
     @property
     def is_on(self) -> bool:
         """Return true if light is on."""
-        return self._device.state.out[self.entity_description.channel_index] > 0
+        return self._device.state.out[self._entity_description.channel_index] > 0
 
     @property
     def icon(self) -> str | None:
@@ -149,7 +149,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             return None
         # return cast(int, self._device.get_value().out[self.entity_description.channel_index])
         return cast(
-            int, self._device.state.out[self.entity_description.channel_index] * 2.55
+            int, self._device.state.out[self._entity_description.channel_index] * 2.55
         )
 
     async def async_turn_off(self, **kwargs: Any) -> None:
@@ -164,7 +164,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
         else:
             # mount device ha value
             ha_val = self._device.get_ha_value()
-            ha_val.out[self.entity_description.channel_index] = 0
+            ha_val.out[self._entity_description.channel_index] = 0
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
@@ -177,11 +177,11 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             brightness = min(brightness, 100)
 
             ha_val = self._device.get_ha_value()
-            ha_val.out[self.entity_description.channel_index] = brightness
+            ha_val.out[self._entity_description.channel_index] = brightness
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
         else:
             ha_val = self._device.get_ha_value()
-            ha_val.out[self.entity_description.channel_index] = 100
+            ha_val.out[self._entity_description.channel_index] = 100
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
