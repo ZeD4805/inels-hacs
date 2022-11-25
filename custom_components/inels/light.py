@@ -5,7 +5,7 @@ from typing import Any, cast
 
 from inelsmqtt.const import RFDAC_71B, DA3_22M  # HERE ?
 from inelsmqtt.devices import Device
-from inelsmqtt.utils import new_object
+from inelsmqtt.util import new_object
 
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
