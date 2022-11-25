@@ -135,7 +135,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
     @property
     def is_on(self) -> bool:
         """Return true if light is on."""
-        return self._device.state.channels[self.entity_description.channel_index] > 0
+        return self._device.state > 0
 
     @property
     def icon(self) -> str | None:
@@ -147,7 +147,8 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
         """Light brightness."""
         if self._device.inels_type is not DA3_22M:
             return None
-        return cast(int, self._device.state.out[self.entity_description.channel_index])
+        # return cast(int, self._device.get_value().out[self.entity_description.channel_index])
+        return cast(int, self._device.state * 2.55)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Light to turn off."""
