@@ -181,7 +181,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
         else:
-            ha_val = self._device.get_value()
+            ha_val = self._device.get_value().ha_value
             ha_val.out[self._entity_description.channel_index] = 100
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
