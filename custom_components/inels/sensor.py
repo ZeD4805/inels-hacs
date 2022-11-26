@@ -309,6 +309,9 @@ async def async_setup_entry(
         if device.device_type == Platform.SENSOR:
             if device.inels_type == RFTI_10B:
                 descriptions = SENSOR_DESCRIPTION_TEMPERATURE
+
+                for description in descriptions:
+                    entities.append(InelsSensor(device, description=description))
             # elif device.inels_type == SA3_01B:
             #    descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
             # elif device.inels_type == DA3_22M:
@@ -320,14 +323,17 @@ async def async_setup_entry(
             else:
                 continue
 
-            for description in descriptions:
-                entities.append(InelsSensor(device, description=description))
-        if device.device_type == Platform.SWITCH:
-            if device.inels_type == SA3_01B:
-                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-
-        for description in descriptions:
-            entities.append(InelsSensor(device, description=description))
+            # for description in descriptions:
+            #    entities.append(InelsSensor(device, description=description))
+        # if device.device_type == Platform.SWITCH:
+        #    if device.inels_type == SA3_01B:
+        #        descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+        #
+        #    LOGGER.info("Trying to add SA3_01B device as a sensor...")
+        #    LOGGER.info(device.state)
+        #
+        #    for description in descriptions:
+        #        entities.append(InelsSensor(device, description=description))
 
     async_add_entities(entities, True)
 
