@@ -129,8 +129,7 @@ class InelsComplexSwitch(InelsBaseEntity, SwitchEntity):
         #     if hasattr(self._device.state, "on"):
         #         return self._device.state.on
 
-        ha_val = self._device.get_value().ha_value
-        return ha_val.on
+        return self._device.state
 
     @property
     def icon(self) -> str | None:
