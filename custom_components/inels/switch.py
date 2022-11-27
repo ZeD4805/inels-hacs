@@ -68,7 +68,7 @@ class InelsSwitch(InelsBaseEntity, SwitchEntity):
         #         return self._device.state.on
 
         ha_val = self._device.get_value().ha_value
-        return ha_val == True
+        return ha_val.on == True
 
     @property
     def icon(self) -> str | None:
