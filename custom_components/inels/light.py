@@ -154,9 +154,9 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             int, self._device.state.out[self._entity_description.channel_index] * 2.55
         )
 
-    async def async_update(self):
-        """Update state."""
-        self.state = self._device.get_value().ha_value
+    # async def async_update(self):
+    #    """Update state."""
+    #    self.state = self._device.get_value().ha_value
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Light to turn off."""
