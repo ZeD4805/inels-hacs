@@ -168,7 +168,7 @@ def __get_temperature_in_str(device: Device) -> str | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val) / 100}"
+    return f"{int(val, 16) / 100}"
 
 
 def __get_light_intensity(
@@ -200,7 +200,7 @@ def __get_light_intensity(
     elif val == BusErrors.BUS_4B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val) / 100}"
+    return f"{int(val, 16) / 100}"
 
 
 def __get_analog_temperature(device: Device) -> str | None:
@@ -230,7 +230,7 @@ def __get_analog_temperature(device: Device) -> str | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val) / 100}"
+    return f"{int(val, 16) / 100}"
 
 
 def __get_humidity(device: Device) -> str | None:
@@ -260,7 +260,7 @@ def __get_humidity(device: Device) -> str | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val) / 100}"
+    return f"{int(val, 16) / 100}"
 
 
 def __get_dew_point(device: Device) -> float | None:
@@ -290,7 +290,7 @@ def __get_dew_point(device: Device) -> float | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val) / 100}"
+    return f"{int(val, 16) / 100}"
 
 
 # RFTI_10B
