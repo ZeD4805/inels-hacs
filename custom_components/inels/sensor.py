@@ -143,7 +143,7 @@ def __get_temperature_from_object(device: Device) -> str | None:
     if device.is_available is False:
         return None
 
-    val = device.state.temp
+    val = int(device.state.temp, 16)
     if val == BusErrors.BUS_2B_NOT_CALIBRATED:
         return "Sensor not calibrated"
     elif val == BusErrors.BUS_2B_NO_VALUE:
