@@ -41,7 +41,7 @@ async def async_setup_entry(
             elif device.inels_type == SA3_01B:
                 entities.append(InelsSwitch(device=device))
 
-    async_add_entities(entities)
+    async_add_entities(entities, True)
 
 
 class InelsSwitch(InelsBaseEntity, SwitchEntity):
@@ -100,7 +100,7 @@ class InelsSwitch(InelsBaseEntity, SwitchEntity):
             return None
 
         await self.hass.async_add_executor_job(self._device.set_ha_value, True)
-        self._is_on = True
+        self.is_on = True
 
     def _callback(self, new_value: Any) -> None:
         """Get callback data from the broker."""

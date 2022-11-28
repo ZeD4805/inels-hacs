@@ -169,7 +169,6 @@ def __get_temperature_in_str(device: Device) -> str | None:
         return "Sensor not communicating"
 
     return f"{val / 100}"
-    # return f"{val}"
 
 
 def __get_light_intensity(
@@ -206,7 +205,6 @@ def __get_light_intensity(
         return "Sensor not communicating"
 
     return f"{val / 100}"
-    # return f"{val}"
 
 
 def __get_analog_temperature(device: Device) -> str | None:
@@ -240,7 +238,6 @@ def __get_analog_temperature(device: Device) -> str | None:
         return "Sensor not communicating"
 
     return f"{val / 100}"
-    # return f"{val}"
 
 
 def __get_humidity(device: Device) -> str | None:
@@ -275,10 +272,9 @@ def __get_humidity(device: Device) -> str | None:
         return "Sensor not communicating"
 
     return f"{val / 100}"
-    # return f"{val}"
 
 
-def __get_dew_point(device: Device) -> float | None:
+def __get_dew_point(device: Device) -> str | None:
     # 2 byte val
     """Get dew point."""
     if device.is_available is False:
@@ -310,7 +306,6 @@ def __get_dew_point(device: Device) -> float | None:
         return "Sensor not communicating"
 
     return f"{val/100}"
-    # return f"{val}"
 
 
 # RFTI_10B
@@ -351,7 +346,7 @@ SENSOR_DESCRIPTION_TEMPERATURE_GENERIC: "tuple[InelsSensorEntityDescription, ...
         device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_TEMPERATURE,
         native_unit_of_measurement=TEMP_CELSIUS,
-        value=__get_temperature_in,
+        value=__get_temperature_in_str,
     ),
 )
 
@@ -426,6 +421,11 @@ async def async_setup_entry(
                     entities.append(InelsSensor(device, description=description))
             else:
                 continue
+        if device.device_type == Platform.LIGHT:
+            if device.inels_type == DA3_22M:
+                description = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+                for description in descriptions:
+                    entities.append(InelsSensor(device, description=description))
 
     async_add_entities(entities, True)
 
