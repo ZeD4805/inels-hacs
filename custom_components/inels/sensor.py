@@ -32,12 +32,7 @@ from inelsmqtt.devices import Device
 
 from inelsmqtt.const import (
     INELS_DEVICE_TYPE_DATA_STRUCT_DATA,
-    BUS_NOT_CALIBRATED,
-    BUS_NO_VALUE,
-    BUS_NOT_CONFIGURED,
-    BUS_MEASURE,
-    BUS_NO_SENSOR,
-    BUS_NOT_COMMUNICATING,
+    BusErrors,
 )
 
 from homeassistant.components.sensor import (
@@ -156,10 +151,24 @@ def __get_temperature_in_str(device: Device) -> str | None:
         device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][TEMP_IN]
     )
 
-    if val == BUS_NOT_CALIBRATED:
+    if val == BusErrors.BUS_2B_NOT_CALIBRATED:
         return "Sensor not calibrated."
+    elif val == BusErrors.BUS_2B_NO_VALUE:
+        return "No value."
+    elif val == BusErrors.BUS_2B_NOT_CONFIGURED:
+        return "Sensor not configured."
+    elif val == BusErrors.BUS_2B_OUT_OF_RANGE:
+        return "Sensor value out of range."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_NO_SENSOR:
+        return "No sensor connected."
+    elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
+        return "Sensor not communicating."
 
-    return None
+    return f"{int(val) / 100}"
 
 
 def __get_light_intensity(
@@ -170,51 +179,88 @@ def __get_light_intensity(
     if device.is_available is False:
         return None
 
-    return (
-        int(
-            _process_data(
-                device.state,
-                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][LIGHT_IN],
-            ),
-            16,
-        )
-        / 100
+    val = _process_data(
+        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][LIGHT_IN]
     )
 
+    if val == BusErrors.BUS_4B_NOT_CALIBRATED:
+        return "Sensor not calibrated."
+    elif val == BusErrors.BUS_4B_NO_VALUE:
+        return "No value."
+    elif val == BusErrors.BUS_4B_NOT_CONFIGURED:
+        return "Sensor not configured."
+    elif val == BusErrors.BUS_4B_OUT_OF_RANGE:
+        return "Sensor value out of range."
+    elif val == BusErrors.BUS_4B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_4B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_4B_NO_SENSOR:
+        return "No sensor connected."
+    elif val == BusErrors.BUS_4B_NOT_COMMUNICATING:
+        return "Sensor not communicating."
 
-def __get_analog_temperature(device: Device) -> float | None:
+    return f"{int(val) / 100}"
+
+
+def __get_analog_temperature(device: Device) -> str | None:
     # 2 byte val
     """Get analog temperature."""
     if device.is_available is False:
         return None
 
-    return (
-        int(
-            _process_data(
-                device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]
-            ),
-            16,
-        )
-        / 100
+    val = _process_data(
+        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]
     )
 
+    if val == BusErrors.BUS_2B_NOT_CALIBRATED:
+        return "Sensor not calibrated."
+    elif val == BusErrors.BUS_2B_NO_VALUE:
+        return "No value."
+    elif val == BusErrors.BUS_2B_NOT_CONFIGURED:
+        return "Sensor not configured."
+    elif val == BusErrors.BUS_2B_OUT_OF_RANGE:
+        return "Sensor value out of range."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_NO_SENSOR:
+        return "No sensor connected."
+    elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
+        return "Sensor not communicating."
 
-def __get_humidity(device: Device) -> float | None:
+    return f"{int(val) / 100}"
+
+
+def __get_humidity(device: Device) -> str | None:
     # 2 byte val
     """Get humidity."""
     if device.is_available is False:
         return None
 
-    return (
-        int(
-            _process_data(
-                device.state,
-                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY],
-            ),
-            16,
-        )
-        / 100
+    val = _process_data(
+        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY]
     )
+
+    if val == BusErrors.BUS_2B_NOT_CALIBRATED:
+        return "Sensor not calibrated."
+    elif val == BusErrors.BUS_2B_NO_VALUE:
+        return "No value."
+    elif val == BusErrors.BUS_2B_NOT_CONFIGURED:
+        return "Sensor not configured."
+    elif val == BusErrors.BUS_2B_OUT_OF_RANGE:
+        return "Sensor value out of range."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_NO_SENSOR:
+        return "No sensor connected."
+    elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
+        return "Sensor not communicating."
+
+    return f"{int(val) / 100}"
 
 
 def __get_dew_point(device: Device) -> float | None:
@@ -223,16 +269,28 @@ def __get_dew_point(device: Device) -> float | None:
     if device.is_available is False:
         return None
 
-    return (
-        int(
-            _process_data(
-                device.state,
-                INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT],
-            ),
-            16,
-        )
-        / 100
+    val = _process_data(
+        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT]
     )
+
+    if val == BusErrors.BUS_2B_NOT_CALIBRATED:
+        return "Sensor not calibrated."
+    elif val == BusErrors.BUS_2B_NO_VALUE:
+        return "No value."
+    elif val == BusErrors.BUS_2B_NOT_CONFIGURED:
+        return "Sensor not configured."
+    elif val == BusErrors.BUS_2B_OUT_OF_RANGE:
+        return "Sensor value out of range."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error."
+    elif val == BusErrors.BUS_2B_NO_SENSOR:
+        return "No sensor connected."
+    elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
+        return "Sensor not communicating."
+
+    return f"{int(val) / 100}"
 
 
 # RFTI_10B
@@ -286,7 +344,7 @@ SENSOR_DESCRIPTION_MULTISENSOR: "tuple[InelsSensorEntityDescription, ...]" = (
         device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_TEMPERATURE,
         native_unit_of_measurement=TEMP_CELSIUS,
-        value=__get_temperature_in,
+        value=__get_temperature_in_str,
     ),
     InelsSensorEntityDescription(
         key="light_in",
