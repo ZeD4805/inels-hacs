@@ -32,6 +32,12 @@ from inelsmqtt.devices import Device
 
 from inelsmqtt.const import (
     INELS_DEVICE_TYPE_DATA_STRUCT_DATA,
+    BUS_NOT_CALIBRATED,
+    BUS_NO_VALUE,
+    BUS_NOT_CONFIGURED,
+    BUS_MEASURE,
+    BUS_NO_SENSOR,
+    BUS_NOT_COMMUNICATING,
 )
 
 from homeassistant.components.sensor import (
@@ -137,9 +143,29 @@ def __get_temperature_out(device: Device) -> float | None:
     )
 
 
+# BUS
+
+
+def __get_temperature_in_str(device: Device) -> str | None:
+    # 2 byte val
+    """Get temperature inside."""
+    if device.is_available is False:
+        return None
+
+    val = _process_data(
+        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][TEMP_IN]
+    )
+
+    if val == BUS_NOT_CALIBRATED:
+        return "Sensor not calibrated."
+
+    return None
+
+
 def __get_light_intensity(
     device: Device,
 ) -> float | None:
+    # 4 byte val
     """Get light intensity."""
     if device.is_available is False:
         return None
@@ -157,6 +183,7 @@ def __get_light_intensity(
 
 
 def __get_analog_temperature(device: Device) -> float | None:
+    # 2 byte val
     """Get analog temperature."""
     if device.is_available is False:
         return None
@@ -173,6 +200,7 @@ def __get_analog_temperature(device: Device) -> float | None:
 
 
 def __get_humidity(device: Device) -> float | None:
+    # 2 byte val
     """Get humidity."""
     if device.is_available is False:
         return None
@@ -190,6 +218,7 @@ def __get_humidity(device: Device) -> float | None:
 
 
 def __get_dew_point(device: Device) -> float | None:
+    # 2 byte val
     """Get dew point."""
     if device.is_available is False:
         return None
@@ -312,31 +341,13 @@ async def async_setup_entry(
 
                 for description in descriptions:
                     entities.append(InelsSensor(device, description=description))
-            # elif device.inels_type == SA3_01B:
-            #    descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-            # elif device.inels_type == DA3_22M:
-            #    descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
             elif device.inels_type == GTR3_50:
                 descriptions = SENSOR_DESCRIPTION_MULTISENSOR
 
                 for description in descriptions:
                     entities.append(InelsSensor(device, description=description))
-            # elif device.inels_type == GSB3_90SX:
-            #    descriptions = SENSOR_DESCRIPTION_MULTISENSOR
             else:
                 continue
-
-            # for description in descriptions:
-            #    entities.append(InelsSensor(device, description=description))
-        # if device.device_type == Platform.SWITCH:
-        #    if device.inels_type == SA3_01B:
-        #        descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-        #
-        #    LOGGER.info("Trying to add SA3_01B device as a sensor...")
-        #    LOGGER.info(device.state)
-        #
-        #    for description in descriptions:
-        #        entities.append(InelsSensor(device, description=description))
 
     async_add_entities(entities, True)
 
