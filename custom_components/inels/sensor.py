@@ -423,7 +423,7 @@ async def async_setup_entry(
                 continue
         if device.device_type == Platform.LIGHT:
             if device.inels_type == DA3_22M:
-                description = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
                 for description in descriptions:
                     entities.append(InelsSensor(device, description=description))
 
