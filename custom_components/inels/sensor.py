@@ -138,6 +138,10 @@ def __get_temperature_out(device: Device) -> float | None:
 # BUS
 
 
+def __get_temperature_fake(device: Device) -> str | None:
+    return "test"
+
+
 def __get_temperature_in_str(device: Device) -> str | None:
     # 2 byte val
     """Get temperature inside."""
@@ -339,7 +343,16 @@ SENSOR_DESCRIPTION_TEMPERATURE: "tuple[InelsSensorEntityDescription, ...]" = (
 
 # SA3_01B
 # DA3_22M
-# SENSOR_DESCRIPTION_TEMPERATURE_GENERIC : InelsSensorEntityDescription(key="temp_in", name="Temperature", device_class=SensorDeviceClass.TEMPERATURE, icon=ICON_TEMPERATURE, native_unit_of_measurement=TEMP_CELSIUS, value=__get_temperature_in_str)
+SENSOR_DESCRIPTION_TEMPERATURE_GENERIC: "tuple[InelsSensorEntityDescription, ...]" = (
+    InelsSensorEntityDescription(
+        key="temp_in",
+        name="Temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        icon=ICON_TEMPERATURE,
+        native_unit_of_measurement=TEMP_CELSIUS,
+        value=__get_temperature_fake,
+    ),
+)
 
 # GTR3_50
 # GSB3_90SX
@@ -414,16 +427,9 @@ async def async_setup_entry(
                 continue
         if device.device_type == Platform.LIGHT:
             if device.inels_type == DA3_22M:
-                description = InelsSensorEntityDescription(
-                    key="temp_in",
-                    name="Temperature",
-                    device_class=SensorDeviceClass.TEMPERATURE,
-                    icon=ICON_TEMPERATURE,
-                    native_unit_of_measurement=TEMP_CELSIUS,
-                    value=__get_temperature_in_str,
-                )
-
-                entities.append(InelsSensor(device, description=description))
+                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+                for description in descriptions:
+                    entities.append(InelsSensor(device, description=description))
 
     async_add_entities(entities, True)
 
