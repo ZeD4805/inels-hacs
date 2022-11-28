@@ -138,8 +138,30 @@ def __get_temperature_out(device: Device) -> float | None:
 # BUS
 
 
-def __get_temperature_fake(device: Device) -> str | None:
-    return "test"
+def __get_temperature_from_object(device: Device) -> str | None:
+    """Get temperature from generic model."""
+    if device.is_available is False:
+        return None
+
+    val = device.state.temp
+    if val == BusErrors.BUS_2B_NOT_CALIBRATED:
+        return "Sensor not calibrated"
+    elif val == BusErrors.BUS_2B_NO_VALUE:
+        return "No value"
+    elif val == BusErrors.BUS_2B_NOT_CONFIGURED:
+        return "Sensor not configured"
+    elif val == BusErrors.BUS_2B_OUT_OF_RANGE:
+        return "Sensor value out of range"
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error"
+    elif val == BusErrors.BUS_2B_MEASURE:
+        return "Sensor measurement error"
+    elif val == BusErrors.BUS_2B_NO_SENSOR:
+        return "No sensor connected"
+    elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
+        return "Sensor not communicating"
+
+    return f"{val / 100}"
 
 
 def __get_temperature_in_str(device: Device) -> str | None:
