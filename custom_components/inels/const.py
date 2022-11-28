@@ -26,8 +26,8 @@ ICON_LIGHT = "mdi:lightbulb"
 ICON_SHUTTER_CLOSED = "mdi:window-shutter"
 ICON_SHUTTER_OPEN = "mdi:window-shutter-open"
 ICON_BUTTON = "mdi:button-pointer"
-ICON_LIGHT_IN = "mdi:light-in"
-ICON_HUMIDITY = "mdi:water-percentage"
+ICON_LIGHT_IN = "mdi:brightness-4"
+ICON_HUMIDITY = "mdi:water-percent"
 ICON_DEW_POINT = "mdi:tailwind"
 
 ICON_WATER_HEATER_DICT = {
