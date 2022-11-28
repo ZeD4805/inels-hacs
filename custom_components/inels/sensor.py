@@ -307,7 +307,7 @@ def __get_dew_point(device: Device) -> float | None:
         return "Sensor measurement error."
     elif val == BusErrors.BUS_2B_MEASURE:
         return "Sensor measurement error."
-    elif val == BusErrors.BUS_2B_NO_SENSOR:
+    elif val == int(BusErrors.BUS_2B_NO_SENSOR):
         return "No sensor connected."
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
