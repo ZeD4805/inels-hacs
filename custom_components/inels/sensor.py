@@ -316,8 +316,11 @@ async def async_setup_entry(
             #    descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
             # elif device.inels_type == DA3_22M:
             #    descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-            # elif device.inels_type == GTR3_50:
-            #    descriptions = SENSOR_DESCRIPTION_MULTISENSOR
+            elif device.inels_type == GTR3_50:
+                descriptions = SENSOR_DESCRIPTION_MULTISENSOR
+
+                for description in descriptions:
+                    entities.append(InelsSensor(device, description=description))
             # elif device.inels_type == GSB3_90SX:
             #    descriptions = SENSOR_DESCRIPTION_MULTISENSOR
             else:
