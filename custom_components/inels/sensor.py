@@ -372,7 +372,7 @@ SENSOR_DESCRIPTION_TEMPERATURE_GENERIC: "tuple[InelsSensorEntityDescription, ...
         device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_TEMPERATURE,
         native_unit_of_measurement=TEMP_CELSIUS,
-        value=__get_temperature_fake,
+        value=__get_temperature_from_object,
     ),
 )
 
