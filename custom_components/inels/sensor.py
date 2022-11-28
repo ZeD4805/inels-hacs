@@ -341,7 +341,7 @@ SENSOR_DESCRIPTION_MULTISENSOR: "tuple[InelsSensorEntityDescription, ...]" = (
     InelsSensorEntityDescription(
         key="temp_in",
         name="Temperature",
-        device_class=SensorDeviceClass.TEMPERATURE,
+        # device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_TEMPERATURE,
         native_unit_of_measurement=TEMP_CELSIUS,
         value=__get_temperature_in_str,
@@ -349,7 +349,7 @@ SENSOR_DESCRIPTION_MULTISENSOR: "tuple[InelsSensorEntityDescription, ...]" = (
     InelsSensorEntityDescription(
         key="light_in",
         name="Light intensity",
-        device_class=SensorDeviceClass.ILLUMINANCE,
+        # device_class=SensorDeviceClass.ILLUMINANCE,
         icon=ICON_LIGHT_IN,
         native_unit_of_measurement="lux",
         value=__get_light_intensity,
@@ -357,7 +357,7 @@ SENSOR_DESCRIPTION_MULTISENSOR: "tuple[InelsSensorEntityDescription, ...]" = (
     InelsSensorEntityDescription(
         key="ain",
         name="Analog temperature",
-        device_class=SensorDeviceClass.TEMPERATURE,
+        # device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_TEMPERATURE,
         native_unit_of_measurement=TEMP_CELSIUS,
         value=__get_analog_temperature,
@@ -365,7 +365,7 @@ SENSOR_DESCRIPTION_MULTISENSOR: "tuple[InelsSensorEntityDescription, ...]" = (
     InelsSensorEntityDescription(
         key="humidity",
         name="Humidity",
-        device_class=SensorDeviceClass.HUMIDITY,
+        # device_class=SensorDeviceClass.HUMIDITY,
         icon=ICON_HUMIDITY,
         native_unit_of_measurement=PERCENTAGE,
         value=__get_humidity,
@@ -373,7 +373,7 @@ SENSOR_DESCRIPTION_MULTISENSOR: "tuple[InelsSensorEntityDescription, ...]" = (
     InelsSensorEntityDescription(
         key="dew_point",
         name="Dew point",
-        device_class=SensorDeviceClass.TEMPERATURE,
+        # device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_DEW_POINT,
         native_unit_of_measurement=TEMP_CELSIUS,
         value=__get_dew_point,
