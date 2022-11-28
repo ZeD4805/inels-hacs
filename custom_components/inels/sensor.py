@@ -369,7 +369,7 @@ SENSOR_DESCRIPTION_TEMPERATURE_GENERIC: "tuple[InelsSensorEntityDescription, ...
     InelsSensorEntityDescription(
         key="temp_in",
         name="Temperature",
-        device_class=SensorDeviceClass.TEMPERATURE,
+        # device_class=SensorDeviceClass.TEMPERATURE,
         icon=ICON_TEMPERATURE,
         native_unit_of_measurement=TEMP_CELSIUS,
         value=__get_temperature_from_object,
