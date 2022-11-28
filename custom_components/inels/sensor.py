@@ -147,8 +147,11 @@ def __get_temperature_in_str(device: Device) -> str | None:
     if device.is_available is False:
         return None
 
-    val = _process_data(
-        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][TEMP_IN]
+    val = int(
+        _process_data(
+            device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][TEMP_IN]
+        ),
+        16,
     )
 
     if val == BusErrors.BUS_2B_NOT_CALIBRATED:
@@ -168,7 +171,7 @@ def __get_temperature_in_str(device: Device) -> str | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val, 16) / 100}"
+    return f"{val / 100}"
     # return f"{val}"
 
 
@@ -180,8 +183,12 @@ def __get_light_intensity(
     if device.is_available is False:
         return None
 
-    val = _process_data(
-        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][LIGHT_IN]
+    val = int(
+        _process_data(
+            device.state,
+            INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][LIGHT_IN],
+        ),
+        16,
     )
 
     if val == BusErrors.BUS_4B_NOT_CALIBRATED:
@@ -201,7 +208,7 @@ def __get_light_intensity(
     elif val == BusErrors.BUS_4B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val, 16) / 100}"
+    return f"{val / 100}"
     # return f"{val}"
 
 
@@ -211,8 +218,11 @@ def __get_analog_temperature(device: Device) -> str | None:
     if device.is_available is False:
         return None
 
-    val = _process_data(
-        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]
+    val = int(
+        _process_data(
+            device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][AIN]
+        ),
+        16,
     )
 
     if val == BusErrors.BUS_2B_NOT_CALIBRATED:
@@ -232,7 +242,7 @@ def __get_analog_temperature(device: Device) -> str | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val, 16) / 100}"
+    return f"{val / 100}"
     # return f"{val}"
 
 
@@ -242,8 +252,12 @@ def __get_humidity(device: Device) -> str | None:
     if device.is_available is False:
         return None
 
-    val = _process_data(
-        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY]
+    val = int(
+        _process_data(
+            device.state,
+            INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][HUMIDITY],
+        ),
+        16,
     )
 
     if val == BusErrors.BUS_2B_NOT_CALIBRATED:
@@ -263,7 +277,7 @@ def __get_humidity(device: Device) -> str | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val, 16) / 100}"
+    return f"{val / 100}"
     # return f"{val}"
 
 
@@ -273,8 +287,12 @@ def __get_dew_point(device: Device) -> float | None:
     if device.is_available is False:
         return None
 
-    val = _process_data(
-        device.state, INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT]
+    val = int(
+        _process_data(
+            device.state,
+            INELS_DEVICE_TYPE_DATA_STRUCT_DATA[device.inels_type][DEW_POINT],
+        ),
+        16,
     )
 
     if val == BusErrors.BUS_2B_NOT_CALIBRATED:
@@ -294,7 +312,7 @@ def __get_dew_point(device: Device) -> float | None:
     elif val == BusErrors.BUS_2B_NOT_COMMUNICATING:
         return "Sensor not communicating."
 
-    return f"{int(val, 16) / 100}"
+    return f"{val/100}"
     # return f"{val}"
 
 
