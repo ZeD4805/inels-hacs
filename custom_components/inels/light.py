@@ -40,8 +40,7 @@ async def async_setup_entry(
             if device.inels_type == DA3_22M:
                 entities.append(
                     InelsLightChannel(
-                        Device(device.mqtt, device.state_topic, title=device.title),
-                        # device,
+                        device,
                         InelsLightChannelDescription(2, 1),
                     )
                 )
