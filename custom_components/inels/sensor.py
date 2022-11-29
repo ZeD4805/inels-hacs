@@ -432,7 +432,6 @@ async def async_setup_entry(
 
     entities: "list[InelsSensor]" = []
 
-    # TODO find solution to avoid including data_struct to the callbacks
     for device in device_list:
         if device.device_type == Platform.SENSOR:
             if device.inels_type == RFTI_10B:
@@ -446,7 +445,8 @@ async def async_setup_entry(
                 for description in descriptions:
                     entities.append(
                         InelsSensor(
-                            Device(device.mqtt, device.state_topic, title=device.title),
+                            # Device(device.mqtt, device.state_topic, title=device.title),
+                            device,
                             description=description,
                         )
                     )
