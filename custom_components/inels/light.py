@@ -245,8 +245,9 @@ class InelsLightChannel2(
         **kw,
     ) -> None:
         """Initialize a light."""
-        kw["device"] = device
-        super().__init__(coordinator=coordinator, kw=kw)
+        super(InelsLightChannel2, self).__init__(
+            device=device, coordinator=coordinator, kw=kw
+        )
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
@@ -254,6 +255,8 @@ class InelsLightChannel2(
         self._attr_supported_color_modes: set[ColorMode] = set()
         if self._device.inels_type is DA3_22M:
             self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
+
+        _entity_description = description
 
     @property
     def is_on(self) -> bool:
