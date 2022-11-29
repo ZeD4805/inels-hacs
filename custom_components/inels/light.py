@@ -219,14 +219,12 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
 
 
 class CoordinatorEntityInheritance(CoordinatorEntity):
-    def __init__(self, coordinator: InelsDeviceUpdateCoordinator2, **kw):
-        self.coordinator = coordinator
+    def __init__(self, **kw):
         super(CoordinatorEntityInheritance, self).__init__(**kw)
 
 
 class InelsBaseEntityInheritance(InelsBaseEntity):
-    def __init__(self, device: Device, **kw):
-        self.device = device
+    def __init__(self, **kw):
         super(InelsBaseEntityInheritance, self).__init__(**kw)
 
 
@@ -245,9 +243,7 @@ class InelsLightChannel2(
         **kw,
     ) -> None:
         """Initialize a light."""
-        super(InelsLightChannel2, self).__init__(
-            device=device, coordinator=coordinator, kw=kw
-        )
+        super(InelsLightChannel2, self).__init__(device=device, coordinator=coordinator)
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
@@ -286,7 +282,7 @@ class InelsLightChannel2(
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         super()._handle_coordinator_update()
-        self.device.get_value()
+        self._device.get_value()
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
