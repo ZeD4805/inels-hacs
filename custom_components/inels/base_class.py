@@ -36,7 +36,7 @@ class InelsBaseEntity(Entity):
     def _callback(self, new_value: Any) -> None:
         """Get data from broker into the HA."""
         self._device.update_value(new_value)
-        self.schedule_update_ha_state()
+        self.schedule_update_ha_state(True)
 
     @property
     def should_poll(self) -> bool:
