@@ -27,11 +27,13 @@ class InelsBaseEntity(Entity):
 
     async def async_added_to_hass(self) -> None:
         """Add subscription of the data listener."""
-        self.async_on_remove(
-            self._device.mqtt.subscribe_listener(
-                self._device.state_topic, self._callback
-            )
-        )
+        # self.async_on_remove(
+        #    self._device.mqtt.subscribe_listener(
+        #        self._device.state_topic, self._callback
+        #    )
+        # )
+
+        self._device.mqtt.subscribe_listener(self._device.state_topic, self._callback)
 
     def _callback(self, new_value: Any) -> None:
         """Get data from broker into the HA."""
