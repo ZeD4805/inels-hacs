@@ -234,6 +234,7 @@ class InelsLightChannel2(
     """Light Channel class for HA. Uses CoordinatorEntity."""
 
     _entity_description: InelsLightChannelDescription
+    coordinator: InelsDeviceUpdateCoordinator2
 
     def __init__(
         self,
@@ -244,6 +245,8 @@ class InelsLightChannel2(
     ) -> None:
         """Initialize a light."""
         super(InelsLightChannel2, self).__init__(device=device, coordinator=coordinator)
+
+        self.coordinator = coordinator
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
