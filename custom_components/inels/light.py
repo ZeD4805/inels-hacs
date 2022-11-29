@@ -245,7 +245,8 @@ class InelsLightChannel2(
         **kw,
     ) -> None:
         """Initialize a light."""
-        super().__init__(coordinator=coordinator, device=device, kw=kw)
+        kw["device"] = device
+        super().__init__(coordinator=coordinator, kw=kw)
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
