@@ -48,7 +48,6 @@ async def async_setup_entry(
                     InelsLightChannel(
                         device,
                         InelsLightChannelDescription(2, 0),
-                        title=device.inels_type + "_" + "0",
                     )
                 )
             else:
