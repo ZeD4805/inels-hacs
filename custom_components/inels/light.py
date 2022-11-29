@@ -57,7 +57,7 @@ async def async_setup_entry(
                     InelsLightChannel2(
                         device=device,
                         coordinator=coordinator,
-                        description=InelsLightChannelDescription(2, 1),
+                        description=InelsLightChannelDescription(2, 0),
                     )
                 )
                 entities.append(
@@ -247,6 +247,7 @@ class InelsLightChannel2(
         super(InelsLightChannel2, self).__init__(device=device, coordinator=coordinator)
 
         self.coordinator = coordinator
+        self._entity_description = description
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
@@ -254,8 +255,6 @@ class InelsLightChannel2(
         self._attr_supported_color_modes: set[ColorMode] = set()
         if self._device.inels_type is DA3_22M:
             self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
-
-        self._entity_description = description
 
     @property
     def is_on(self) -> bool:
