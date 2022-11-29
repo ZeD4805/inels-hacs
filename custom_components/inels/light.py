@@ -219,13 +219,13 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
 
 
 class CoordinatorEntityInheritance(CoordinatorEntity):
-    def __init__(self, **kw):
-        super(CoordinatorEntityInheritance, self).__init__(**kw)
+    def __init__(self, coordinator, **kw):
+        super(CoordinatorEntityInheritance, self).__init__(coordinator)
 
 
 class InelsBaseEntityInheritance(InelsBaseEntity):
-    def __init__(self, **kw):
-        super(InelsBaseEntityInheritance, self).__init__(**kw)
+    def __init__(self, device, **kw):
+        super(InelsBaseEntityInheritance, self).__init__(device)
 
 
 class InelsLightChannel2(
