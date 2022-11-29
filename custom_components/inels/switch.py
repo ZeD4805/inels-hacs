@@ -100,7 +100,7 @@ class InelsSwitch(InelsBaseEntity, SwitchEntity):
             return None
 
         await self.hass.async_add_executor_job(self._device.set_ha_value, True)
-        self.is_on = True
+        self._is_on = True
 
     def _callback(self, new_value: Any) -> None:
         """Get callback data from the broker."""
