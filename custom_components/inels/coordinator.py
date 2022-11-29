@@ -6,7 +6,10 @@ from datetime import timedelta
 from inelsmqtt.devices import Device
 
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import (
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 
 from .const import LOGGER
 

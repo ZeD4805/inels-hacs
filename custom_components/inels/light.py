@@ -17,11 +17,14 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from homeassistant.core import logging
 
 from .base_class import InelsBaseEntity
 from .const import DEVICES, DOMAIN, ICON_LIGHT
+
+from .coordinator import InelsDeviceUpdateCoordinator
 
 
 async def async_setup_entry(
@@ -38,16 +41,20 @@ async def async_setup_entry(
         if device.device_type == Platform.LIGHT:
             # entities.append(InelsLight(device))
             if device.inels_type == DA3_22M:
+                coordinator = InelsDeviceUpdateCoordinator(hass=hass, device=device)
+
                 entities.append(
-                    InelsLightChannel(
-                        device,
-                        InelsLightChannelDescription(2, 1),
+                    InelsLightChannel2(
+                        device=device,
+                        coordinator=coordinator,
+                        description=InelsLightChannelDescription(2, 1),
                     )
                 )
                 entities.append(
-                    InelsLightChannel(
-                        device,
-                        InelsLightChannelDescription(2, 0),
+                    InelsLightChannel2(
+                        device=device,
+                        coordinator=coordinator,
+                        description=InelsLightChannelDescription(2, 1),
                     )
                 )
             else:
@@ -132,6 +139,103 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
         """Initialize a light."""
         super().__init__(device=device)
         self._entity_description = description
+
+        self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
+        self._attr_name = f"{self._attr_name}-{description.channel_index}"
+
+        self._attr_supported_color_modes: set[ColorMode] = set()
+        if self._device.inels_type is DA3_22M:
+            self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
+
+    @property
+    def is_on(self) -> bool:
+        """Return true if light is on."""
+        return self._device.state.out[self._entity_description.channel_index] > 0
+
+    @property
+    def icon(self) -> str | None:
+        """Light icon."""
+        return ICON_LIGHT
+
+    @property
+    def brightness(self) -> int | None:
+        """Light brightness."""
+        if self._device.inels_type is not DA3_22M:
+            return None
+        # return cast(int, self._device.get_value().out[self.entity_description.channel_index])
+        return cast(
+            int, self._device.state.out[self._entity_description.channel_index] * 2.55
+        )
+
+    # async def async_update(self):
+    #    """Update state."""
+    #    self.state = self._device.get_value().ha_value
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Light to turn off."""
+        if not self._device:
+            return
+
+        transition = None
+        if ATTR_TRANSITION in kwargs:
+            transition = int(kwargs[ATTR_TRANSITION]) / 0.065
+            print(transition)
+        else:
+            logging.log(0, "Logging ha_val:")
+            # mount device ha value
+            ha_val = self._device.get_value().ha_value
+            logging.log(0, ha_val)
+            ha_val.out[self._entity_description.channel_index] = 0
+            await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Light to turn on"""
+        if not self._device:
+            return
+
+        if ATTR_BRIGHTNESS in kwargs:
+            brightness = int(kwargs[ATTR_BRIGHTNESS] / 2.55)
+            brightness = min(brightness, 100)
+
+            ha_val = self._device.get_value().ha_value
+            ha_val.out[self._entity_description.channel_index] = brightness
+
+            await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+        else:
+            ha_val = self._device.get_value().ha_value
+            ha_val.out[self._entity_description.channel_index] = 100
+
+            await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+
+class CoordinatorEntityInheritance(CoordinatorEntity):
+    def __init__(self, coordinator: InelsDeviceUpdateCoordinator, **kw):
+        self.coordinator = coordinator
+        super(CoordinatorEntityInheritance, self).__init__(**kw)
+
+
+class InelsBaseEntityInheritance(InelsBaseEntity):
+    def __init__(self, device: Device, **kw):
+        self.device = device
+        super(InelsBaseEntityInheritance, self).__init__(**kw)
+
+
+class InelsLightChannel2(
+    CoordinatorEntityInheritance, InelsBaseEntityInheritance, LightEntity
+):
+    """Light Channel class for HA. Uses CoordinatorEntity."""
+
+    _entity_description: InelsLightChannelDescription
+
+    def __init__(
+        self,
+        device: Device,
+        description: InelsLightChannelDescription,
+        coordinator: InelsDeviceUpdateCoordinator,
+        **kw,
+    ) -> None:
+        """Initialize a light."""
+        super().__init__(coordinator=coordinator, device=device, kw=kw)
 
         self._attr_unique_id = f"{self._attr_unique_id}-{description.channel_index}"
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
