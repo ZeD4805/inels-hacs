@@ -444,7 +444,12 @@ async def async_setup_entry(
                 descriptions = SENSOR_DESCRIPTION_MULTISENSOR
 
                 for description in descriptions:
-                    entities.append(InelsSensor(device, description=description))
+                    entities.append(
+                        InelsSensor(
+                            Device(device.mqtt, device.state_topic, title=device.title),
+                            description=description,
+                        )
+                    )
             else:
                 continue
         elif device.device_type == Platform.LIGHT:
