@@ -457,11 +457,11 @@ async def async_setup_entry(
                 descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
                 for description in descriptions:
                     entities.append(InelsSensor(device, description=description))
-        elif device.device_type == Platform.SWITCH:
-            if device.inels_type == SA3_01B:
-                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-                for description in descriptions:
-                    entities.append(InelsSensor(device, description=description))
+        # elif device.device_type == Platform.SWITCH:
+        #    if device.inels_type == SA3_01B:
+        #        descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+        #        for description in descriptions:
+        #            entities.append(InelsSensor(device, description=description))
 
     async_add_entities(entities, True)
 
