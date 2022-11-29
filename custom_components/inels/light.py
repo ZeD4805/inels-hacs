@@ -42,10 +42,15 @@ async def async_setup_entry(
                     InelsLightChannel(
                         device,
                         InelsLightChannelDescription(2, 1),
+                        title=device.inels_type + "_" + "1",
                     )
                 )
                 entities.append(
-                    InelsLightChannel(device, InelsLightChannelDescription(2, 0))
+                    InelsLightChannel(
+                        device,
+                        InelsLightChannelDescription(2, 0),
+                        title=device.inels_type + "_" + "0",
+                    )
                 )
             else:
                 entities.append(InelsLight(device))
