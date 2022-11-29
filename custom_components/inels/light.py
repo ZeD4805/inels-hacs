@@ -229,7 +229,7 @@ class InelsBaseEntityInheritance(InelsBaseEntity):
 
 
 class InelsLightChannel2(
-    CoordinatorEntityInheritance, InelsBaseEntityInheritance, LightEntity
+    InelsBaseEntityInheritance, CoordinatorEntityInheritance, LightEntity
 ):
     """Light Channel class for HA. Uses CoordinatorEntity."""
 
