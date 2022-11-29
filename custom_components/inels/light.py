@@ -255,7 +255,7 @@ class InelsLightChannel2(
         if self._device.inels_type is DA3_22M:
             self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
 
-        _entity_description = description
+        self._entity_description = description
 
     @property
     def is_on(self) -> bool:
