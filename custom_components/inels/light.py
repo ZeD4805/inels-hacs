@@ -1,6 +1,5 @@
 """iNels light."""
 from __future__ import annotations
-
 from typing import Any, cast
 
 from inelsmqtt.const import RFDAC_71B, DA3_22M  # HERE ?
@@ -15,7 +14,7 @@ from homeassistant.components.light import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -24,7 +23,7 @@ from homeassistant.core import logging
 from .base_class import InelsBaseEntity
 from .const import DEVICES, DOMAIN, ICON_LIGHT
 
-from .coordinator import InelsDeviceUpdateCoordinator
+from .coordinator import InelsDeviceUpdateCoordinator2
 
 
 async def async_setup_entry(
@@ -41,32 +40,33 @@ async def async_setup_entry(
         if device.device_type == Platform.LIGHT:
             # entities.append(InelsLight(device))
             if device.inels_type == DA3_22M:
-                entities.append(
-                    InelsLightChannel(
-                        device, description=InelsLightChannelDescription(2, 0)
-                    )
-                )
-                entities.append(
-                    InelsLightChannel(
-                        device, description=InelsLightChannelDescription(2, 1)
-                    )
-                )
-                # coordinator = InelsDeviceUpdateCoordinator(hass=hass, device=device)
+                # entities.append(
+                #    InelsLightChannel(
+                #        device, description=InelsLightChannelDescription(2, 0)
+                #    )
+                # )
+                # entities.append(
+                #    InelsLightChannel(
+                #        device, description=InelsLightChannelDescription(2, 1)
+                #    )
+                # )
 
-                # entities.append(
-                #    InelsLightChannel2(
-                #        device=device,
-                #        coordinator=coordinator,
-                #        description=InelsLightChannelDescription(2, 1),
-                #    )
-                # )
-                # entities.append(
-                #    InelsLightChannel2(
-                #        device=device,
-                #        coordinator=coordinator,
-                #        description=InelsLightChannelDescription(2, 1),
-                #    )
-                # )
+                coordinator = InelsDeviceUpdateCoordinator2(hass=hass, device=device)
+
+                entities.append(
+                    InelsLightChannel2(
+                        device=device,
+                        coordinator=coordinator,
+                        description=InelsLightChannelDescription(2, 1),
+                    )
+                )
+                entities.append(
+                    InelsLightChannel2(
+                        device=device,
+                        coordinator=coordinator,
+                        description=InelsLightChannelDescription(2, 1),
+                    )
+                )
             else:
                 entities.append(InelsLight(device))
 
@@ -219,7 +219,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
 
 
 class CoordinatorEntityInheritance(CoordinatorEntity):
-    def __init__(self, coordinator: InelsDeviceUpdateCoordinator, **kw):
+    def __init__(self, coordinator: InelsDeviceUpdateCoordinator2, **kw):
         self.coordinator = coordinator
         super(CoordinatorEntityInheritance, self).__init__(**kw)
 
@@ -241,7 +241,7 @@ class InelsLightChannel2(
         self,
         device: Device,
         description: InelsLightChannelDescription,
-        coordinator: InelsDeviceUpdateCoordinator,
+        coordinator: InelsDeviceUpdateCoordinator2,
         **kw,
     ) -> None:
         """Initialize a light."""
@@ -278,6 +278,13 @@ class InelsLightChannel2(
     #    """Update state."""
     #    self.state = self._device.get_value().ha_value
 
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        super()._handle_coordinator_update()
+        self.device.get_value()
+        self.async_write_ha_state()
+
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Light to turn off."""
         if not self._device:
@@ -294,6 +301,8 @@ class InelsLightChannel2(
             logging.log(0, ha_val)
             ha_val.out[self._entity_description.channel_index] = 0
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+        await self.coordinator.async_request_refresh()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Light to turn on"""
@@ -313,3 +322,5 @@ class InelsLightChannel2(
             ha_val.out[self._entity_description.channel_index] = 100
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+        await self.coordinator.async_request_refresh()
