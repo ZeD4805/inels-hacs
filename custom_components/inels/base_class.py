@@ -26,7 +26,7 @@ class InelsBaseEntity(Entity):
         self._attr_unique_id = f"{self._parent_id}-{self._device_id}"
 
     async def async_added_to_hass(self) -> None:
-        """Add subscription of the data listenere."""
+        """Add subscription of the data listener."""
         self.async_on_remove(
             self._device.mqtt.subscribe_listener(
                 self._device.state_topic, self._callback
