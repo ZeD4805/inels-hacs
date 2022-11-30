@@ -21,7 +21,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.core import logging
 
 from .base_class import InelsBaseEntity
-from .const import DEVICES, DOMAIN, ICON_LIGHT
+from .const import DEVICES, DOMAIN, ICON_LIGHT, LOGGER
 
 from .coordinator import InelsDeviceUpdateCoordinator2
 
@@ -304,6 +304,10 @@ class InelsLightChannel2(
             ha_val.out[self._entity_description.channel_index] = 0
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
+        LOGGER.debug(
+            f"Light {self._entity_description.channel_index}/{self._entity_description.channel_number} turned off."
+        )
+
         await self.coordinator.async_request_refresh()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
@@ -324,5 +328,9 @@ class InelsLightChannel2(
             ha_val.out[self._entity_description.channel_index] = 100
 
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+        LOGGER.debug(
+            f"Light {self._entity_description.channel_index}/{self._entity_description.channel_number} turned on."
+        )
 
         await self.coordinator.async_request_refresh()
