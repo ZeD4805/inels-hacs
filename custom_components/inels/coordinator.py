@@ -113,6 +113,8 @@ class InelsDeviceUpdateCoordinator2(DataUpdateCoordinator[Device]):
             # reset update interval
             self.update_interval = timedelta(seconds=SCAN_INTERVAL)
 
+        LOGGER.warning("Async update data - Inels Device Update Coordinator 2")
+
         return self.device
 
     @property
