@@ -259,7 +259,10 @@ class InelsLightChannel2(
     @property
     def is_on(self) -> bool:
         """Return true if light is on."""
-        return self.coordinator.state.out[self._entity_description.channel_index] > 0
+        return (
+            self.coordinator.device.state.out[self._entity_description.channel_index]
+            > 0
+        )
         # return self._device.state.out[self._entity_description.channel_index] > 0
 
     @property
