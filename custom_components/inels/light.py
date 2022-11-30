@@ -311,7 +311,7 @@ class InelsLightChannel2(
             self._entity_description.channel_number,
         )
 
-        await self.coordinator.async_add_listener()  # async_request_refresh()
+        await self.coordinator.async_request_refresh()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Light to turn on"""
