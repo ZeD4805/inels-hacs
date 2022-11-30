@@ -3,7 +3,7 @@ import logging
 
 from homeassistant.const import Platform
 
-DOMAIN = "inels"
+DOMAIN = "inels-dev"
 
 BROKER_CONFIG = "inels_mqtt_broker_config"
 BROKER = "inels_mqtt_broker"
@@ -11,7 +11,7 @@ DEVICES = "devices"
 
 CONF_DISCOVERY_PREFIX = "discovery_prefix"
 
-TITLE = "iNELS"
+TITLE = "iNELS-dev"
 DESCRIPTION = ""
 INELS_VERSION = 1
 LOGGER = logging.getLogger(__package__)
