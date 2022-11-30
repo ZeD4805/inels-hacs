@@ -305,7 +305,9 @@ class InelsLightChannel2(
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
         LOGGER.warning(
-            f"Light {self._entity_description.channel_index}/{self._entity_description.channel_number} turned off."
+            "Light %d/%d turned off",
+            self._entity_description.channel_index,
+            self._entity_description.channel_number,
         )
 
         await self.coordinator.async_request_refresh()
@@ -330,7 +332,9 @@ class InelsLightChannel2(
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
         LOGGER.warning(
-            f"Light {self._entity_description.channel_index}/{self._entity_description.channel_number} turned on."
+            "Light %d/%d turned on",
+            self._entity_description.channel_index,
+            self._entity_description.channel_number,
         )
 
         await self.coordinator.async_request_refresh()
