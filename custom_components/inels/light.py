@@ -277,7 +277,10 @@ class InelsLightChannel2(
             return None
         # return cast(int, self._device.get_value().out[self.entity_description.channel_index])
         return cast(
-            int, self._device.state.out[self._entity_description.channel_index] * 2.55
+            int,
+            # self._device.state.out[self._entity_description.channel_index] * 2.55
+            self.coordinator.device.state.out[self._entity_description.channel_index]
+            * 2.55,
         )
 
     # async def async_update(self):
@@ -302,12 +305,14 @@ class InelsLightChannel2(
             transition = int(kwargs[ATTR_TRANSITION]) / 0.065
             print(transition)
         else:
-            logging.log(0, "Logging ha_val:")
             # mount device ha value
-            ha_val = self._device.get_value().ha_value
-            logging.log(0, ha_val)
+            # ha_val = self._device.get_value().ha_value
+            ha_val = self.coordinator.device.get_value().ha_value
             ha_val.out[self._entity_description.channel_index] = 0
-            await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+            # await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+            await self.hass.async_add_executor_job(
+                self.coordinator.device.set_ha_value, ha_val
+            )
 
         LOGGER.warning(
             "Light %d/%d turned off",
@@ -326,15 +331,28 @@ class InelsLightChannel2(
             brightness = int(kwargs[ATTR_BRIGHTNESS] / 2.55)
             brightness = min(brightness, 100)
 
-            ha_val = self._device.get_value().ha_value
+            # ha_val = self._device.get_value().ha_value
+            # ha_val.out[self._entity_description.channel_index] = brightness
+
+            # await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+            ha_val = self.coordinator.device.get_value().ha_value
             ha_val.out[self._entity_description.channel_index] = brightness
+            await self.hass.async_add_executor_job(
+                self.coordinator.device.set_ha_value, ha_val
+            )
 
-            await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
         else:
-            ha_val = self._device.get_value().ha_value
-            ha_val.out[self._entity_description.channel_index] = 100
+            # ha_val = self._device.get_value().ha_value
+            # ha_val.out[self._entity_description.channel_index] = 100
 
-            await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+            # await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
+
+            ha_val = self.coordinator.device.get_value().ha_value
+            ha_val.out[self._entity_description.channel_index] = 100
+            await self.hass.async_add_executor_job(
+                self.coordinator.device.set_ha_value, ha_val
+            )
 
         LOGGER.warning(
             "Light %d/%d turned on",

@@ -114,7 +114,7 @@ class InelsDeviceUpdateCoordinator2(DataUpdateCoordinator[Device]):
             self.update_interval = timedelta(seconds=SCAN_INTERVAL)
 
         LOGGER.warning("Async update data - Inels Device Update Coordinator 2")
-        LOGGER.warning(self.device.__values.__state.__inels_status_value)
+        # LOGGER.warning(self.device.__values.__state.__inels_status_value)
         return self.device
 
     @property
