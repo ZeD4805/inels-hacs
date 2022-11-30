@@ -40,33 +40,34 @@ async def async_setup_entry(
         if device.device_type == Platform.LIGHT:
             # entities.append(InelsLight(device))
             if device.inels_type == DA3_22M:
-                # entities.append(
-                #    InelsLightChannel(
-                #        device, description=InelsLightChannelDescription(2, 0)
-                #    )
-                # )
-                # entities.append(
-                #    InelsLightChannel(
-                #        device, description=InelsLightChannelDescription(2, 1)
-                #    )
-                # )
-
-                coordinator = InelsDeviceUpdateCoordinator2(hass=hass, device=device)
-
                 entities.append(
-                    InelsLightChannel2(
-                        device=device,
-                        coordinator=coordinator,
-                        description=InelsLightChannelDescription(2, 0),
+                    InelsLightChannel(
+                        device, description=InelsLightChannelDescription(2, 0)
                     )
                 )
                 entities.append(
-                    InelsLightChannel2(
-                        device=device,
-                        coordinator=coordinator,
-                        description=InelsLightChannelDescription(2, 1),
+                    InelsLightChannel(
+                        device, description=InelsLightChannelDescription(2, 1)
                     )
                 )
+
+                # COORDINATOR version
+                # coordinator = InelsDeviceUpdateCoordinator2(hass=hass, device=device)
+
+                # entities.append(
+                #    InelsLightChannel2(
+                #        device=device,
+                #        coordinator=coordinator,
+                #        description=InelsLightChannelDescription(2, 0),
+                #    )
+                # )
+                # entities.append(
+                #    InelsLightChannel2(
+                #        device=device,
+                #        coordinator=coordinator,
+                #        description=InelsLightChannelDescription(2, 1),
+                #    )
+                # )
             else:
                 entities.append(InelsLight(device))
 
