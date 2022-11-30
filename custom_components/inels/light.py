@@ -284,6 +284,7 @@ class InelsLightChannel2(
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         super()._handle_coordinator_update()
+        LOGGER.warning(self.coordinator.data.get_value())
         self._device.get_value()
         self.async_write_ha_state()
 
@@ -310,7 +311,7 @@ class InelsLightChannel2(
             self._entity_description.channel_number,
         )
 
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_add_listener()  # async_request_refresh()
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Light to turn on"""
