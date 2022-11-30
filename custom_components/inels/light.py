@@ -317,9 +317,7 @@ class InelsLightChannel2(
             "Light %d/%d turned off (%d)",
             self._entity_description.channel_index,
             self._entity_description.channel_number,
-            self.coordinator.device.get_value().ha_value.out[
-                self._entity_description.channel_index
-            ],
+            self.coordinator.device.__state.out[self._entity_description.channel_index],
         )
 
         await self.coordinator.async_request_refresh()
@@ -360,9 +358,7 @@ class InelsLightChannel2(
             "Light %d/%d turned on (%d)",
             self._entity_description.channel_index,
             self._entity_description.channel_number,
-            self.coordinator.device.get_value().ha_value.out[
-                self._entity_description.channel_index
-            ],
+            self.coordinator.device.__state.out[self._entity_description.channel_index],
         )
 
         await self.coordinator.async_request_refresh()
