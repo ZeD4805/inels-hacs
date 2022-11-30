@@ -318,7 +318,7 @@ class InelsLightChannel2(
             self._entity_description.channel_index,
             self._entity_description.channel_number,
             # self.coordinator.device.__state.out[self._entity_description.channel_index],
-            f"{self.coordinator.device.get_value()}",
+            f"{self.coordinator.device.get_value().inels_value}",
         )
 
         await self.coordinator.async_request_refresh()
@@ -360,7 +360,7 @@ class InelsLightChannel2(
             self._entity_description.channel_index,
             self._entity_description.channel_number,
             # self.coordinator.device.__state.out[self._entity_description.channel_index],
-            f"{self.coordinator.device.get_value()}",
+            f"{self.coordinator.device.get_value().inels_value}",
         )
 
         await self.coordinator.async_request_refresh()
