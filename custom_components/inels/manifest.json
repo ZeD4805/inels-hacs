@@ -1,6 +1,6 @@
 {
-  "domain": "inels-dev",
-  "name": "iNELS-dev",
+  "domain": "inels",
+  "name": "iNELS",
   "config_flow": true,
   "version": "0.0.1",
   "issue_tracker": "https://github.com/zed4805/inels-hacs/issues",
