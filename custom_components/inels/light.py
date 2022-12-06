@@ -195,7 +195,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             logging.log(0, "Logging ha_val:")
             # mount device ha value
             ha_val = self._device.get_value().ha_value
-            logging.log(0, "out1 %d out2 %d", ha_val.out[0], ha_val.out[1])
+            logging.log(0, f"out1 {ha_val.out[0]} out2 {ha_val.out[1]}")
             ha_val.out[self._entity_description.channel_index] = 0
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
