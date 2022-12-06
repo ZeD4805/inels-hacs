@@ -192,10 +192,8 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
             transition = int(kwargs[ATTR_TRANSITION]) / 0.065
             print(transition)
         else:
-            logging.log(0, "Logging ha_val:")
             # mount device ha value
             ha_val = self._device.get_value().ha_value
-            logging.log(0, f"out1 {int(ha_val.out[0])} out2 {int(ha_val.out[1])}")
             ha_val.out[self._entity_description.channel_index] = 0
             await self.hass.async_add_executor_job(self._device.set_ha_value, ha_val)
 
