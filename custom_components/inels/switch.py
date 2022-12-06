@@ -22,7 +22,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .base_class import InelsBaseEntity
-from .const import DEVICES, DOMAIN, ICON_SWITCH
+from .const import DEVICES, DOMAIN, ICON_SWITCH, LOGGER
 
 
 async def async_setup_entry(
@@ -40,6 +40,7 @@ async def async_setup_entry(
                 entities.append(InelsSwitch(device=device))
             elif device.inels_type == SA3_01B:
                 entities.append(InelsSwitch(device=device))
+                LOGGER.info("Added SA3_01B (%s)", device.__unique_id)
 
     async_add_entities(entities, True)
 
