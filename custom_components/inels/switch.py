@@ -40,7 +40,7 @@ async def async_setup_entry(
                 entities.append(InelsSwitch(device=device))
             elif device.inels_type == SA3_01B:
                 entities.append(InelsSwitch(device=device))
-                LOGGER.info("Added SA3_01B (%s)", device.get_unique_id())
+                # LOGGER.info("Added SA3_01B (%s)", device.get_unique_id())
 
     async_add_entities(entities, True)
 
