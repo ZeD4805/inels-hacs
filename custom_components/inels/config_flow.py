@@ -5,7 +5,7 @@ from collections import OrderedDict
 from typing import Any
 
 from inelsmqtt import InelsMqtt
-from inelsmqtt.const import MQTT_TRANSPORT
+from inelsmqtt.const import MQTT_TRANSPORT, MQTT_TIMEOUT
 import voluptuous as vol
 
 from homeassistant import config_entries
@@ -77,6 +77,7 @@ class FlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_PASSWORD: user_input.get(CONF_PASSWORD),
                         MQTT_TRANSPORT: user_input.get(MQTT_TRANSPORT),
                         CONF_DISCOVERY: True,
+                        MQTT_TIMEOUT: CONNECTION_TIMEOUT,
                     },
                 )
 
