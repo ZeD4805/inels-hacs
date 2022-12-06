@@ -65,8 +65,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         await hass.async_add_executor_job(mqtt.close)
         raise ConfigEntryNotReady from exc
 
+    LOGGER.info("Finished discovery, setting up platform.")
+
     hass.data[DOMAIN][entry.entry_id] = inels_data
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
+
+    LOGGER.info("Platform setup complete.")
 
     return True
 
