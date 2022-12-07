@@ -2,9 +2,8 @@
 from __future__ import annotations
 from typing import Any, cast
 
-from inelsmqtt.const import RFDAC_71B, DA3_22M  # HERE ?
-from inelsmqtt.devices import Device
-from inelsmqtt.util import new_object
+from inelsmqtt.devices import Element
+from inelsmqtt.devices.light import Light
 
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
@@ -32,14 +31,15 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Load Inels lights from config entry."""
-    device_list: "list[Device]" = hass.data[DOMAIN][config_entry.entry_id][DEVICES]
+    device_list: "list[Light]" = hass.data[DOMAIN][config_entry.entry_id][DEVICES]
 
     entities = []
 
     for device in device_list:
         if device.device_type == Platform.LIGHT:
-            # entities.append(InelsLight(device))
-            if device.inels_type == DA3_22M:
+            entities.append(InelsLight(device))
+        elif device.device_type == "bus":
+            if device.inels_type == Element.DA3_22M:
                 entities.append(
                     InelsLightChannel(
                         device, description=InelsLightChannelDescription(2, 0)
@@ -51,39 +51,20 @@ async def async_setup_entry(
                     )
                 )
 
-                # COORDINATOR version
-                # coordinator = InelsDeviceUpdateCoordinator2(hass=hass, device=device)
-
-                # entities.append(
-                #    InelsLightChannel2(
-                #        device=device,
-                #        coordinator=coordinator,
-                #        description=InelsLightChannelDescription(2, 0),
-                #    )
-                # )
-                # entities.append(
-                #    InelsLightChannel2(
-                #        device=device,
-                #        coordinator=coordinator,
-                #        description=InelsLightChannelDescription(2, 1),
-                #    )
-                # )
-            else:
-                entities.append(InelsLight(device))
-
     async_add_entities(entities)
 
 
 class InelsLight(InelsBaseEntity, LightEntity):
     """Light class for HA."""
 
-    def __init__(self, device: Device) -> None:
+    def __init__(self, device: Light) -> None:
         """Initialize a light."""
         super().__init__(device=device)
 
         self._attr_supported_color_modes: set[ColorMode] = set()
-        if self._device.inels_type is RFDAC_71B:
-            self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
+
+        for feature in self._device.features:
+            self._attr_supported_color_modes.add(feature)
 
     @property
     def is_on(self) -> bool:
@@ -98,9 +79,10 @@ class InelsLight(InelsBaseEntity, LightEntity):
     @property
     def brightness(self) -> int | None:
         """Light brightness."""
-        if self._device.inels_type is not RFDAC_71B:
-            return None
-        return cast(int, self._device.state * 2.55)
+        if ATTR_BRIGHTNESS in self._device.features:
+            return cast(int, self._device.state * 2.55)
+        # Brightness is not a defined feature
+        return None
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Light to turn off."""
@@ -145,7 +127,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
     _entity_description: InelsLightChannelDescription
 
     def __init__(
-        self, device: Device, description: InelsLightChannelDescription
+        self, device: Light, description: InelsLightChannelDescription
     ) -> None:
         """Initialize a light."""
         super().__init__(device=device)
@@ -155,8 +137,8 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
 
         self._attr_supported_color_modes: set[ColorMode] = set()
-        if self._device.inels_type is DA3_22M:
-            self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
+        for feature in self._device.features:
+            self._attr_supported_color_modes.add(feature)
 
     @property
     def is_on(self) -> bool:
@@ -171,7 +153,7 @@ class InelsLightChannel(InelsBaseEntity, LightEntity):
     @property
     def brightness(self) -> int | None:
         """Light brightness."""
-        if self._device.inels_type is not DA3_22M:
+        if ATTR_BRIGHTNESS not in self._device.features:
             return None
         # return cast(int, self._device.get_value().out[self.entity_description.channel_index])
         return cast(
@@ -237,7 +219,7 @@ class InelsLightChannel2(
 
     def __init__(
         self,
-        device: Device,
+        device: Light,
         description: InelsLightChannelDescription,
         coordinator: InelsDeviceUpdateCoordinator2,
         **kw,
@@ -252,8 +234,8 @@ class InelsLightChannel2(
         self._attr_name = f"{self._attr_name}-{description.channel_index}"
 
         self._attr_supported_color_modes: set[ColorMode] = set()
-        if self._device.inels_type is DA3_22M:
-            self._attr_supported_color_modes.add(ColorMode.BRIGHTNESS)
+        for feature in self._device.features:
+            self._attr_supported_color_modes.add(feature)
 
     @property
     def is_on(self) -> bool:
@@ -272,7 +254,7 @@ class InelsLightChannel2(
     @property
     def brightness(self) -> int | None:
         """Light brightness."""
-        if self._device.inels_type is not DA3_22M:
+        if ATTR_BRIGHTNESS not in self._device.features:
             return None
         # return cast(int, self._device.get_value().out[self.entity_description.channel_index])
         return cast(
@@ -289,7 +271,7 @@ class InelsLightChannel2(
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        super()._handle_coordinator_update()
+        super()._handle_coordinator_update()  # TODO check
         self._device.get_value()
         self.async_write_ha_state()
 

@@ -15,20 +15,15 @@ from inelsmqtt.const import (
     AIN,
     HUMIDITY,
     DEW_POINT,
-    # Inels types
-    RFTI_10B,
-    SA3_01B,
-    DA3_22M,
-    GTR3_50,
-    GSB3_90SX,
     # Device data types
-    TEMP_SENSOR_DATA,
     RELAY_DATA,
     TWOCHANNELDIMMER_DATA,
     THERMOSTAT_DATA,
     BUTTONARRAY_DATA,
+    Element,
 )
 from inelsmqtt.devices import Device
+from inelsmqtt.devices.sensor import Sensor
 
 from inelsmqtt.const import (
     INELS_DEVICE_TYPE_DATA_STRUCT_DATA,
@@ -428,40 +423,34 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Load Inels switch.."""
-    device_list: "list[Device]" = hass.data[DOMAIN][config_entry.entry_id][DEVICES]
+    device_list: "list[Sensor]" = hass.data[DOMAIN][config_entry.entry_id][DEVICES]
 
     entities: "list[InelsSensor]" = []
 
     for device in device_list:
-        if device.device_type == Platform.SENSOR:
-            if device.inels_type == RFTI_10B:
-                descriptions = SENSOR_DESCRIPTION_TEMPERATURE
+        descriptions = []
 
-                for description in descriptions:
-                    entities.append(InelsSensor(device, description=description))
-            elif device.inels_type == GTR3_50:
+        if device.device_type == Platform.SENSOR:
+            if device.inels_type == Element.RFTI_10B:
+                descriptions = SENSOR_DESCRIPTION_TEMPERATURE
+            elif device.inels_type == Element.GTR3_50:
+                descriptions = SENSOR_DESCRIPTION_MULTISENSOR
+        elif device.device_type == "bus":
+            if device.inels_type == Element.DA3_22M:
+                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+            elif device.inels_type == Element.SA3_01B:
+                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
+            elif device.inels_type == Element.GTR3_50:
                 descriptions = SENSOR_DESCRIPTION_MULTISENSOR
 
-                for description in descriptions:
-                    entities.append(
-                        InelsSensor(
-                            # Device(device.mqtt, device.state_topic, title=device.title),
-                            device,
-                            description=description,
-                        )
-                    )
-            else:
-                continue
-        elif device.device_type == Platform.LIGHT:
-            if device.inels_type == DA3_22M:
-                descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-                for description in descriptions:
-                    entities.append(InelsSensor(device, description=description))
-        # elif device.device_type == Platform.SWITCH:
-        #    if device.inels_type == SA3_01B:
-        #        descriptions = SENSOR_DESCRIPTION_TEMPERATURE_GENERIC
-        #        for description in descriptions:
-        #            entities.append(InelsSensor(device, description=description))
+        for description in descriptions:
+            entities.append(
+                InelsSensor(
+                    # Device(device.mqtt, device.state_topic, title=device.title),
+                    device,
+                    description=description,
+                )
+            )
 
     async_add_entities(entities, True)
 
@@ -485,9 +474,21 @@ class InelsSensor(InelsBaseEntity, SensorEntity):
         if description.name:
             self._attr_name = f"{self._attr_name}-{description.name}"
 
-        self._attr_native_value = self.entity_description.value(self._device)
+        value = self.entity_description.value(self._device)
+
+        self._attr_native_value = value  # removed?
+
+    # TODO: GOLD MINE
+    async def async_added_to_hass(self) -> None:
+        """Add subscription of the data listener"""
+        self.async_on_remove(
+            self._device.subscribe_listener(self._attr_unique_id, self._callback)
+        )
 
     def _callback(self, new_value: Any) -> None:
         """Refresh data."""
+        val = self.entity_description.value(self._device)
+        self._attr_native_value = val
+
+        # callback later after updating local val # what is this for?
         super()._callback(new_value)
-        self._attr_native_value = self.entity_description.value(self._device)

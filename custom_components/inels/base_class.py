@@ -15,10 +15,10 @@ class InelsBaseEntity(Entity):
 
     def __init__(
         self,
-        device: Device,
+        device: Any,
     ) -> None:
         """Init base entity."""
-        self._device: Device = device
+        self._device: Any = device
         self._device_id = self._device.unique_id
         self._attr_name = self._device.title
 
@@ -29,13 +29,16 @@ class InelsBaseEntity(Entity):
         """Add subscription of the data listenere."""
         self.async_on_remove(
             self._device.mqtt.subscribe_listener(
-                self._device.state_topic, self._callback
+                # self._device.state_topic,
+                # self._callback,
+                self._attr_unique_id,
+                self._callback,
             )
         )
 
     def _callback(self, new_value: Any) -> None:
         """Get data from broker into the HA."""
-        self._device.update_value(new_value)
+        # self._device.update_value(new_value)
         self.schedule_update_ha_state()
 
     @property
