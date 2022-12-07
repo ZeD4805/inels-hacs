@@ -35,13 +35,13 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Load Inels water heater from config entry."""
-    device_list: list[Device] = hass.data[DOMAIN][config_entry.entry_id][DEVICES]
+    device_list: "list[Device]" = hass.data[DOMAIN][config_entry.entry_id][DEVICES]
 
     async_add_entities(
         [
             InelsClimate(device)
             for device in device_list
-            if device.device_type.value == Platform.CLIMATE
+            if device.device_type == Platform.CLIMATE
         ],
     )
 
